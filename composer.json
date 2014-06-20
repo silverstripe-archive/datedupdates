@@ -10,7 +10,8 @@
 	],
 	"require": {
 		"silverstripe/framework": "3.1.*",
-		"silverstripe/cms": "3.1.*"
+		"silverstripe/cms": "3.1.*",
+		"silverstripe/taxonomy": "1.0.3"
 	},
 	"minimum-stability": "dev"
 }
