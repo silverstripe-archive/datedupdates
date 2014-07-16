@@ -17,7 +17,7 @@ class DatedUpdateHolder extends Page {
 	public function UpdateTags() {
 		$tags = TaxonomyTerm::get()
 			->innerJoin(self::$taxonomy_join_table, '"TaxonomyTerm"."ID"="'.self::$taxonomy_join_table.'"."TaxonomyTermID"')
-			->innerJoin('SiteTree', '"SiteTree"."ID"="'.self::$taxonomy_join_table.'"."PageID" AND "SiteTree"."ParentID"="'.$this->ID.'"')
+			->innerJoin('SiteTree', '"SiteTree"."ID"="'.self::$taxonomy_join_table.'"."PageID" AND "SiteTree"."ParentID"='.$this->ID)
 			->sort('Name');
 
 		return $tags;
@@ -59,7 +59,7 @@ class DatedUpdateHolder extends Page {
 		if (isset($tagID)) {
 			$items = $items
 				->innerJoin(self::$taxonomy_join_table, '"DatedUpdatePage"."ID"="'.self::$taxonomy_join_table.'"."PageID"')
-				->innerJoin('TaxonomyTerm', '"'.self::$taxonomy_join_table.'"."TaxonomyTermID"="TaxonomyTerm"."ID" AND "TaxonomyTerm"."ID"="'.$tagID.'"');
+				->innerJoin('TaxonomyTerm', '"'.self::$taxonomy_join_table.'"."TaxonomyTermID"="TaxonomyTerm"."ID" AND "TaxonomyTerm"."ID"='.Convert::raw2sql($tagID));
 		}
 
 		// Filter by date
@@ -76,7 +76,7 @@ class DatedUpdateHolder extends Page {
 				$dateFrom = "$dateFrom 00:00:00";
 			}
 
-			$items = $items->where('("DatedUpdatePage"."Date">="'.$dateFrom.'" AND "DatedUpdatePage"."Date"<="'.$dateTo.'")');
+			$items = $items->where('("DatedUpdatePage"."Date">=\''.$dateFrom.'\' AND "DatedUpdatePage"."Date"<=\''.$dateTo.'\')');
 		}
 
 		// Filter down to single month.
@@ -87,7 +87,7 @@ class DatedUpdateHolder extends Page {
 			$beginDate = "$year-$monthNumber-01 00:00:00";
 			$endDate = date('Y-m-d H:i:s', strtotime("$year-$monthNumber-1 00:00:00 +1 month"));
 
-			$items = $items->where('("DatedUpdatePage"."Date">="'.$beginDate.'" AND "DatedUpdatePage"."Date"<"'.$endDate.'")');
+			$items = $items->where('("DatedUpdatePage"."Date">=\''.$beginDate.'\' AND "DatedUpdatePage"."Date"<\''.$endDate.'\')');
 		}
 
 		// Unpaginated DataList.
