@@ -9,13 +9,15 @@ class DatedUpdateHolder extends Page {
 
 	private static $update_class = 'DatedUpdatePage';
 
+	private static $taxonomy_join_table = 'Page_Tags';
+
 	/**
 	 * Find all distinct tags (TaxonomyTerms) associated with the DatedUpdatePages under this holder.
 	 */
 	public function UpdateTags() {
 		$tags = TaxonomyTerm::get()
-			->innerJoin('Page_Terms', '"TaxonomyTerm"."ID"="Page_Terms"."TaxonomyTermID"')
-			->innerJoin('SiteTree', "\"SiteTree\".\"ID\"=\"Page_Terms\".\"PageID\" AND \"SiteTree\".\"ParentID\"='$this->ID'")
+			->innerJoin(self::$taxonomy_join_table, '"TaxonomyTerm"."ID"="'.self::$taxonomy_join_table.'"."TaxonomyTermID"')
+			->innerJoin('SiteTree', '"SiteTree"."ID"="'.self::$taxonomy_join_table.'"."PageID" AND "SiteTree"."ParentID"="'.$this->ID.'"')
 			->sort('Name');
 
 		return $tags;
@@ -55,13 +57,9 @@ class DatedUpdateHolder extends Page {
 
 		// Filter down to a single tag.
 		if (isset($tagID)) {
-			$items = $items->innerJoin(
-					'Page_Terms',
-					'"DatedUpdatePage"."ID"="Page_Terms"."PageID"'
-				)->innerJoin(
-					'TaxonomyTerm',
-					"\"Page_Terms\".\"TaxonomyTermID\"=\"TaxonomyTerm\".\"ID\" AND \"TaxonomyTerm\".\"ID\"='$tagID'"
-				);
+			$items = $items
+				->innerJoin(self::$taxonomy_join_table, '"DatedUpdatePage"."ID"="'.self::$taxonomy_join_table.'"."PageID"')
+				->innerJoin('TaxonomyTerm', '"'.self::$taxonomy_join_table.'"."TaxonomyTermID"="TaxonomyTerm"."ID" AND "TaxonomyTerm"."ID"="'.$tagID.'"');
 		}
 
 		// Filter by date
@@ -78,7 +76,7 @@ class DatedUpdateHolder extends Page {
 				$dateFrom = "$dateFrom 00:00:00";
 			}
 
-			$items = $items->where("(\"DatedUpdatePage\".\"Date\">='$dateFrom' AND \"DatedUpdatePage\".\"Date\"<='$dateTo')");
+			$items = $items->where('("DatedUpdatePage"."Date">="'.$dateFrom.'" AND "DatedUpdatePage"."Date"<="'.$dateTo.'")');
 		}
 
 		// Filter down to single month.
@@ -89,7 +87,7 @@ class DatedUpdateHolder extends Page {
 			$beginDate = "$year-$monthNumber-01 00:00:00";
 			$endDate = date('Y-m-d H:i:s', strtotime("$year-$monthNumber-1 00:00:00 +1 month"));
 
-			$items = $items->where("(\"DatedUpdatePage\".\"Date\">='$beginDate' AND \"DatedUpdatePage\".\"Date\"<'$endDate')");
+			$items = $items->where('("DatedUpdatePage"."Date">="'.$beginDate.'" AND "DatedUpdatePage"."Date"<"'.$endDate.'")');
 		}
 
 		// Unpaginated DataList.
