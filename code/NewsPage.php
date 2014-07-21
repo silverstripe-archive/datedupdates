@@ -2,15 +2,15 @@
 
 class NewsPage extends DatedUpdatePage {
 
-	private static $description = 'Describes an item of news';
+	private static $description = 'A generic news article';
 
 	private static $default_parent = 'NewsHolderPage';
 
 	private static $can_be_root = false;
 
-	private static $icon = 'datedupdates/images/icons/sitetree_images/news.png';
+	private static $icon = 'datedupdates/images/icons/sitetree_images/bell.png';
 
-	public $pageIcon = 'datedupdates/images/icons/sitetree_images/news.png';
+	public $pageIcon = 'datedupdates/images/icons/sitetree_images/bell.png';
 
 	private static $db = array(
 		'Author' => 'Varchar(255)'

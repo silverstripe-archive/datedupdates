@@ -2,9 +2,9 @@
 
 class NewsHolder extends DatedUpdateHolder {
 
-	private static $description = 'Container page for News Pages, provides news filtering and pagination';
+	private static $description = 'Container page for News, Events and Media articles, provides filtering and pagination';
 
-	private static $allowed_children = array('NewsPage', 'EventPage');
+	private static $allowed_children = array('NewsPage', 'EventPage', 'MediaPage');
 
 	private static $default_child = 'NewsPage';
 
