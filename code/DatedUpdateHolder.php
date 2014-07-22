@@ -182,7 +182,6 @@ class DatedUpdateHolder extends Page {
 	public function getSubscriptionTitle() {
 		return $this->Title;
 	}
-
 }
 
 /**

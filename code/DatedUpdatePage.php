@@ -13,6 +13,17 @@ class DatedUpdatePage extends Page {
 		'Date' => 'Datetime'
 	);
 
+	private static $summary_fields = array(
+		'ID' => 'ID',
+		'MenuTitle' => 'Page name',
+		'Created' => 'Created',
+		'LastEdited' => 'Last Edited'
+	);
+
+	public function summaryFields(){
+		return self::$summary_fields;
+	}
+
 	/**
 	 * Add the default for the Date being the current day.
 	 */
