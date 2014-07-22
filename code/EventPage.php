@@ -26,8 +26,8 @@ class EventPage extends NewsPage {
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
-		$fields->addFieldToTab('Root.Event Details', new DatetimeField('EventDate', $this->fieldLabel('EventDate')));
-		$fields->addFieldToTab('Root.Event Details', new TextField('Location', $this->fieldLabel('EventLocation')));
+		$fields->addFieldToTab('Root.Main', new DatetimeField('EventDate', $this->fieldLabel('EventDate')), 'FeaturedImage');
+		$fields->addFieldToTab('Root.Main', new TextField('Location', $this->fieldLabel('EventLocation')), 'FeaturedImage');
 		return $fields;
 	}
 }

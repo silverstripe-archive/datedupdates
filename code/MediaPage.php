@@ -21,19 +21,19 @@ class MediaPage extends NewsPage {
 
 	public function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
-		$labels['ContactName'] = _t('DateUpdatePage.ContactNameFieldLabel', 'Name');
-		$labels['ContactEmail'] = _t('DateUpdatePage.ContactEmailFieldLabel', 'Email');
-		$labels['ContactPhone'] = _t('DateUpdatePage.ContactPhoneFieldLabel', 'Phone');
-		$labels['ContactMobile'] = _t('DateUpdatePage.ContactMobileFieldLabel', 'Mobile');
+		$labels['ContactName'] = _t('DateUpdatePage.ContactNameFieldLabel', 'Contact Name');
+		$labels['ContactEmail'] = _t('DateUpdatePage.ContactEmailFieldLabel', 'Contact Email');
+		$labels['ContactPhone'] = _t('DateUpdatePage.ContactPhoneFieldLabel', 'Contact Phone');
+		$labels['ContactMobile'] = _t('DateUpdatePage.ContactMobileFieldLabel', 'Contact Mobile');
 		return $labels;
 	}
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
-		$fields->addFieldToTab('Root.Contact Details', new TextField('ContactName', $this->fieldLabel('ContactName')));
-		$fields->addFieldToTab('Root.Contact Details', new EmailField('ContactEmail', $this->fieldLabel('ContactEmail')));
-		$fields->addFieldToTab('Root.Contact Details', new TextField('ContactPhone', $this->fieldLabel('ContactPhone')));
-		$fields->addFieldToTab('Root.Contact Details', new TextField('ContactMobile', $this->fieldLabel('ContactMobile')));
+		$fields->addFieldToTab('Root.Main', new TextField('ContactName', $this->fieldLabel('ContactName')), 'FeaturedImage');
+		$fields->addFieldToTab('Root.Main', new EmailField('ContactEmail', $this->fieldLabel('ContactEmail')), 'FeaturedImage');
+		$fields->addFieldToTab('Root.Main', new TextField('ContactPhone', $this->fieldLabel('ContactPhone')), 'FeaturedImage');
+		$fields->addFieldToTab('Root.Main', new TextField('ContactMobile', $this->fieldLabel('ContactMobile')), 'FeaturedImage');
 		return $fields;
 	}
 }
