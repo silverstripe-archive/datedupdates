@@ -23,30 +23,32 @@ class DatedUpdateHolder extends Page {
 
 	/**
 	 * This is meant as an abstract base class, so we want to hide the ancestor from the cms
-	 * @var $hide_ancestor
+	 * @var string
 	 */
 	private static $hide_ancestor = 'DatedUpdateHolder';
 
 	/**
 	 * A display label used in the getUpdateName function
-	 * @var $update_name
+	 * @var string
 	 */
 	private static $update_name = 'Updates';
 
 	/**
 	 * The child page classname to lookup when finding all updates belonging to this holder
-	 * @var $update_class
+	 * @var string
 	 */
 	private static $update_class = 'DatedUpdatePage';
 
 	/**
 	 * which must match your many_many array key for the {@link TaxonomyTerm} relationship in the base page where your taxonomy is setup
-	 * @var $taxonomy_join_table
+	 * @var string
 	 */
 	private static $taxonomy_join_table = 'Page_Tags';
 
 	/**
 	 * Find all distinct tags (TaxonomyTerms) associated with the DatedUpdatePages under this holder.
+	 *
+	 * @return DataList
 	 */
 	public function UpdateTags() {
 		$tags = TaxonomyTerm::get()
@@ -59,6 +61,8 @@ class DatedUpdateHolder extends Page {
 
 	/**
 	 * Wrapper to find all updates belonging to this holder, based on some filters.
+	 *
+	 * @see {@link self::AllUpdates()}.
 	 */
 	public function Updates($tagID = null, $dateFrom = null, $dateTo = null, $year = null, $monthNumber = null) {
 		$className = Config::inst()->get($this->ClassName, 'update_class');
@@ -69,15 +73,14 @@ class DatedUpdateHolder extends Page {
 	 * Find all site's updates, based on some filters.
 	 * Omitting parameters will prevent relevant filters from being applied. The filters are ANDed together.
 	 *
-	 * @param $className The name of the class to fetch.
-	 * @param $parentID The ID of the holder to extract the updates from.
-	 * @param $tagID The ID of the tag to filter the updates by.
-	 * @param $dateFrom The beginning of a date filter range.
-	 * @param $dateTo The end of the date filter range. If empty, only one day will be searched for.
-	 * @param $year Numeric value of the year to show.
-	 * @param $monthNumber Numeric value of the month to show.
-	 *
-	 * @returns DataList | PaginatedList
+	 * @param string $className The name of the class to fetch.
+	 * @param integer $parentID The ID of the holder to extract the updates from.
+	 * @param integer $tagID The ID of the tag to filter the updates by.
+	 * @param string $dateFrom The beginning of a date filter range.
+	 * @param string $dateTo The end of the date filter range. If empty, only one day will be searched for.
+	 * @param string $year Numeric value of the year to show.
+	 * @param string $month Numeric value of the month to show.
+	 * @return DataList | PaginatedList
 	 */
 	public static function AllUpdates($className = 'DatedUpdatePage', $parentID = null, $tagID = null, $dateFrom = null,
 			$dateTo = null, $year = null, $monthNumber = null) {
@@ -85,21 +88,21 @@ class DatedUpdateHolder extends Page {
 		$items = $className::get();
 
 		// Filter by parent holder.
-		if (isset($parentID)) {
+		if(isset($parentID)) {
 			$items = $items->filter(array('ParentID'=>$parentID));
 		}
 
 		// Filter down to a single tag.
-		if (isset($tagID)) {
+		if(isset($tagID)) {
 			$items = $items
 				->innerJoin(self::$taxonomy_join_table, '"DatedUpdatePage"."ID"="'.self::$taxonomy_join_table.'"."PageID"')
 				->innerJoin('TaxonomyTerm', '"'.self::$taxonomy_join_table.'"."TaxonomyTermID"="TaxonomyTerm"."ID" AND "TaxonomyTerm"."ID"='.Convert::raw2sql($tagID));
 		}
 
 		// Filter by date
-		if (isset($dateFrom)) {
+		if(isset($dateFrom)) {
 
-			if (isset($dateTo)) {
+			if(isset($dateTo)) {
 				// Date range
 				$dateTo = "$dateTo 23:59:59";
 				$dateFrom = "$dateFrom 00:00:00";
@@ -114,7 +117,7 @@ class DatedUpdateHolder extends Page {
 		}
 
 		// Filter down to single month.
-		if (isset($year) && isset($monthNumber)) {
+		if(isset($year) && isset($monthNumber)) {
 			$year = (int)$year;
 			$monthNumber = (int)$monthNumber;
 
@@ -145,16 +148,15 @@ class DatedUpdateHolder extends Page {
 	 *     Months => ArrayList:
 	 *     ...
 	 *
-	 * @param $updates DataList DataList to extract months from.
-	 * @param $link Link used as abase to construct the MonthLink.
-	 * @param $currentYear Currently selected year, for computing the link active state.
-	 * @param $currentMonthNumber Currently selected month, for computing the link active state.
-	 *
-	 * @returns ArrayList
+	 * @param DataList $updates DataList to extract months from.
+	 * @param string $link Link used as abase to construct the MonthLink.
+	 * @param integer $currentYear Currently selected year, for computing the link active state.
+	 * @param integer $currentMonthNumber Currently selected month, for computing the link active state.
+	 * @return ArrayList
 	 */
 	public static function ExtractMonths(DataList $updates, $link = null, $currentYear = null, $currentMonthNumber = null) {
 		// Set the link to current URL in the same way the HTTP::setGetVar does it.
-		if (!isset($link)) {
+		if(!isset($link)) {
 			$link = Director::makeRelative($_SERVER['REQUEST_URI']);
 		}
 
@@ -165,23 +167,23 @@ class DatedUpdateHolder extends Page {
 			$date = $update->obj('Date');
 			$year = $date->Format('Y');
 			// Check if the date is actually set
-			if ($year) {
+			if($year) {
 				$monthNumber = $date->Format('n');
 				$monthName = $date->Format('M');
 
 				// Set up the relevant year array, if not yet available.
-				if (!isset($years[$year])) {
+				if(!isset($years[$year])) {
 					$years[$year] = array('YearName'=>$year, 'Months'=>array());
 				}
 
 				// Check if the currently processed month is the one that is selected via GET params.
 				$active = false;
-				if (isset($year) && isset($monthNumber)) {
+				if(isset($year) && isset($monthNumber)) {
 					$active = (((int)$currentYear)==$year && ((int)$currentMonthNumber)==$monthNumber);
 				}
 
 				// Build the link - keep the tag and date filter, but reset the pagination.
-				if ($active) {
+				if($active) {
 					// Allow clicking to deselect the month.
 					$link = HTTP::setGetVar('month', null, $link, '&');
 					$link = HTTP::setGetVar('year', null, $link, '&');
@@ -209,10 +211,18 @@ class DatedUpdateHolder extends Page {
 		return new ArrayList(array_reverse($years));
 	}
 
+	/**
+	 *
+	 * @return string
+	 */
 	public function getDefaultRSSLink() {
 		return $this->Link('rss');
 	}
 
+	/**
+	 *
+	 * @return string
+	 */
 	public function getSubscriptionTitle() {
 		return $this->Title;
 	}
@@ -243,6 +253,8 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 
 	/**
 	 * Initialise the controller to include requirements and sort out the rss feed
+	 *
+	 * @return void
 	 */
 	public function init() {
 		parent::init();
@@ -256,23 +268,24 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 
 	/**
 	 * Returns a description of the current filter
+	 *
 	 * @return string
 	 */
 	public function FilterDescription() {
 		$params = $this->parseParams();
 
 		$filters = array();
-		if ($params['tag']) {
+		if($params['tag']) {
 			$term = TaxonomyTerm::get_by_id('TaxonomyTerm', $params['tag']);
-			if ($term) {
+			if($term) {
 				$filters[] = 'within "' . $term->Name . '"';
 			}
 		}
 
-		if ($params['from'] || $params['to']) {
-			if ($params['from']) {
+		if($params['from'] || $params['to']) {
+			if($params['from']) {
 				$from = strtotime($params['from']);
-				if ($params['to']) {
+				if($params['to']) {
 					$to = strtotime($params['to']);
 					$filters[] = 'between ' . date('j/m/Y', $from) . ' and ' . date('j/m/Y', $to);
 				} else {
@@ -284,18 +297,19 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 			}
 		}
 
-		if ($params['year'] && $params['month']) {
+		if($params['year'] && $params['month']) {
 			$timestamp = mktime(1, 1, 1, $params['month'], 1, $params['year']);
 			$filters[] = 'in ' . date('F', $timestamp) . ' ' . $params['year'];
 		}
 
-		if ($filters) {
+		if($filters) {
 			return $this->getUpdateName() . ' ' . implode(' ', $filters);
 		}
 	}
 
 	/**
 	 * Get a label to use in the Updates display
+	 *
 	 * @return string
 	 */
 	public function getUpdateName() {
@@ -305,7 +319,7 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 	/**
 	 * Parse URL parameters and set the filters
 	 *
-	 * @param $produceErrorMessages Set to false to omit session messages.
+	 * @param boolean $produceErrorMessages Set to false to omit session messages.
 	 * @return array
 	 */
 	public function parseParams($produceErrorMessages = true) {
@@ -315,38 +329,38 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 		$year = $this->request->getVar('year');
 		$month = $this->request->getVar('month');
 
-		if ($tag=='') $tag = null;
-		if ($from=='') $from = null;
-		if ($to=='') $to = null;
-		if ($year=='') $year = null;
-		if ($month=='') $month = null;
+		if($tag=='') $tag = null;
+		if($from=='') $from = null;
+		if($to=='') $to = null;
+		if($year=='') $year = null;
+		if($month=='') $month = null;
 
-		if (isset($tag)) $tag = (int)$tag;
-		if (isset($from)) {
+		if(isset($tag)) $tag = (int)$tag;
+		if(isset($from)) {
 			$from = urldecode($from);
 			$parser = new SS_Datetime;
 			$parser->setValue($from);
 			$from = $parser->Format('Y-m-d');
 		}
-		if (isset($to)) {
+		if(isset($to)) {
 			$to = urldecode($to);
 			$parser = new SS_Datetime;
 			$parser->setValue($to);
 			$to = $parser->Format('Y-m-d');
 		}
-		if (isset($year)) $year = (int)$year;
-		if (isset($month)) $month = (int)$month;
+		if(isset($year)) $year = (int)$year;
+		if(isset($month)) $month = (int)$month;
 
 		// If only "To" has been provided filter by single date. Normalise by swapping with "From".
-		if (isset($to) && !isset($from)) {
+		if(isset($to) && !isset($from)) {
 			list($to, $from) = array($from, $to);
 		}
 
 		// Flip the dates if the order is wrong.
-		if (isset($to) && isset($from) && strtotime($from)>strtotime($to)) {
+		if(isset($to) && isset($from) && strtotime($from)>strtotime($to)) {
 			list($to, $from) = array($from, $to);
 
-			if ($produceErrorMessages) {
+			if($produceErrorMessages) {
 				Session::setFormMessage(
 					'Form_DateRangeForm',
 					_t('DateUpdateHolder.FilterAppliedMessage','Filter has been applied with the dates reversed.'),
@@ -356,8 +370,8 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 		}
 
 		// Notify the user that filtering by single date is taking place.
-		if (isset($from) && !isset($to)) {
-			if ($produceErrorMessages) {
+		if(isset($from) && !isset($to)) {
+			if($produceErrorMessages) {
 				Session::setFormMessage(
 					'Form_DateRangeForm',
 					_t('DateUpdateHolder.DateRangeFilterMessage','Filtered by a single date.'),
@@ -377,7 +391,8 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 
 	/**
 	 * Build the link - keep the date range, reset the rest.
-	 * @return String Absolute URL
+	 *
+	 * @return string Absolute URL
 	 */
 	public function AllTagsLink() {
 		$link = HTTP::setGetVar('tag', null, null, '&');
@@ -390,6 +405,7 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 
 	/**
 	 * List tags and attach links.
+	 * 
 	 * @return ArrayList
 	 */
 	public function UpdateTagsWithLinks() {
@@ -413,12 +429,13 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 
 	/**
 	 * Get the TaxonomyTerm related to the current tag GET parameter.
+	 * 
 	 * @return TaxonomyTerm
 	 */
 	public function CurrentTag() {
 		$tagID = $this->request->getVar('tag');
 
-		if (isset($tagID)) {
+		if(isset($tagID)) {
 			return TaxonomyTerm::get_by_id('TaxonomyTerm', (int)$tagID);
 		}
 	}
@@ -426,6 +443,7 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 	/**
 	 * Extract the available months based on the current query.
 	 * Only tag is respected. Pagination and months are ignored.
+	 * 
 	 * @return DatedUpdateHolder
 	 */
 	public function AvailableMonths() {
@@ -441,6 +459,8 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 
 	/**
 	 * Get the updates based on the current query.
+	 *
+	 * @param integer $pageSize
 	 * @return PaginatedList
 	 */
 	public function FilteredUpdates($pageSize = 20) {
@@ -498,7 +518,7 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 		// Build the link - keep the tag, but reset month, year and pagination.
 		$link = HTTP::setGetVar('from', $params['from'], $this->AbsoluteLink(), '&');
 		$link = HTTP::setGetVar('to', $params['to'], $link, '&');
-		if (isset($params['tag'])) $link = HTTP::setGetVar('tag', $params['tag'], $link, '&');
+		if(isset($params['tag'])) $link = HTTP::setGetVar('tag', $params['tag'], $link, '&');
 
 		$this->redirect($link);
 	}
@@ -511,7 +531,7 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 
 		// Reset the link - only include the tag.
 		$link = $this->AbsoluteLink();
-		if (isset($params['tag'])) $link = HTTP::setGetVar('tag', $params['tag'], $link, '&');
+		if(isset($params['tag'])) $link = HTTP::setGetVar('tag', $params['tag'], $link, '&');
 
 		$this->redirect($link);
 	}

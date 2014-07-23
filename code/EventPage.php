@@ -17,6 +17,11 @@ class EventPage extends NewsPage {
 		'EventLocation' => 'Varchar(255)'
 	);
 
+	/**
+	 * 
+	 * @param boolean $includerelations
+	 * @return array
+	 */
 	public function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
 		$labels['EventLocation'] = _t('DateUpdatePage.EventDateFieldLabel', 'Event Date');
@@ -24,6 +29,10 @@ class EventPage extends NewsPage {
 		return $labels;
 	}
 
+	/**
+	 * 
+	 * @return FieldList
+	 */
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		$fields->addFieldToTab('Root.Main', new DatetimeField('EventDate', $this->fieldLabel('EventDate')), 'FeaturedImage');

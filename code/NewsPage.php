@@ -28,6 +28,11 @@ class NewsPage extends DatedUpdatePage {
 		'FeaturedImage' => 'Image'
 	);
 
+	/**
+	 * 
+	 * @param boolean $includerelations
+	 * @return array
+	 */
 	public function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
 		$labels['Author'] = _t('DateUpdatePage.AuthorFieldLabel', 'Author');
@@ -35,6 +40,10 @@ class NewsPage extends DatedUpdatePage {
 		return $labels;
 	}
 
+	/**
+	 *
+	 * @return FieldList
+	 */
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		$fields->addFieldToTab('Root.Main', new DropdownField("ParentID", "Parent News Holder", NewsHolder::get()->map('ID', 'Title')), 'Title');
@@ -57,5 +66,6 @@ class NewsPage_Controller extends DatedUpdatePage_Controller {
 	 * Initialise the controller
 	 */
 	public function init() {
+		parent::init();
 	}
 }

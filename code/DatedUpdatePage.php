@@ -32,12 +32,18 @@ class DatedUpdatePage extends Page {
 		'LastEdited' => 'Last Edited'
 	);
 
+	/**
+	 *
+	 * @return array
+	 */
 	public function summaryFields(){
 		return self::$summary_fields;
 	}
 
 	/**
 	 * Add the default for the Date being the current day.
+	 *
+	 * @return void
 	 */
 	public function populateDefaults() {
 		parent::populateDefaults();
@@ -47,6 +53,11 @@ class DatedUpdatePage extends Page {
 		}
 	}
 
+	/**
+	 *
+	 * @param boolean $includerelations
+	 * @return array
+	 */
 	public function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
 		$labels['Date'] = _t('DateUpdatePage.DateLabel', 'Date');
@@ -55,6 +66,10 @@ class DatedUpdatePage extends Page {
 		return $labels;
 	}
 
+	/**
+	 *
+	 * @return FieldList
+	 */
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 
@@ -93,5 +108,6 @@ class DatedUpdatePage_Controller extends Page_Controller {
 	 * Initialise the controller
 	 */
 	public function init() {
+		parent::init();
 	}
 }

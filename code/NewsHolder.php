@@ -30,15 +30,14 @@ class NewsHolder extends DatedUpdateHolder {
 	 * Find all site's news items, based on some filters.
 	 * Omitting parameters will prevent relevant filters from being applied. The filters are ANDed together.
 	 *
-	 * @param $className The name of the class to fetch.
-	 * @param $parentID The ID of the holder to extract the news items from.
-	 * @param $tagID The ID of the tag to filter the news items by.
-	 * @param $dateFrom The beginning of a date filter range.
-	 * @param $dateTo The end of the date filter range. If empty, only one day will be searched for.
-	 * @param $year Numeric value of the year to show.
-	 * @param $monthNumber Numeric value of the month to show.
-	 *
-	 * @returns DataList | PaginatedList
+	 * @param string $className The name of the class to fetch.
+	 * @param integer $parentID The ID of the holder to extract the news items from.
+	 * @param integer $tagID The ID of the tag to filter the news items by.
+	 * @param string $dateFrom The beginning of a date filter range.
+	 * @param string $dateTo The end of the date filter range. If empty, only one day will be searched for.
+	 * @param integer $year Numeric value of the year to show.
+	 * @param integer $monthNumber Numeric value of the month to show.
+	 * @return DataList | PaginatedList
 	 */
 	public static function AllUpdates($className = 'NewsPage', $parentID = null, $tagID = null, $dateFrom = null,
 			$dateTo = null, $year = null, $monthNumber = null) {
@@ -53,6 +52,10 @@ class NewsHolder_Controller extends DatedUpdateHolder_Controller {
 		'rss'
 	);
 
+	/**
+	 *
+	 * @return string
+	 */
 	public function rss() {
 		$rss = new RSSFeed($this->Updates()->sort('Created DESC')->limit(20), $this->Link(), $this->getSubscriptionTitle());
 		$rss->setTemplate('NewsHolder_rss');

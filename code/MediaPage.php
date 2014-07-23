@@ -19,6 +19,11 @@ class MediaPage extends NewsPage {
 		'ContactMobile' => 'Varchar(255)'
 	);
 
+	/**
+	 * 
+	 * @param boolean $includerelations
+	 * @return array
+	 */
 	public function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
 		$labels['ContactName'] = _t('DateUpdatePage.ContactNameFieldLabel', 'Contact Name');
@@ -28,6 +33,10 @@ class MediaPage extends NewsPage {
 		return $labels;
 	}
 
+	/**
+	 *
+	 * @return FieldList
+	 */
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		$fields->addFieldToTab('Root.Main', new TextField('ContactName', $this->fieldLabel('ContactName')), 'FeaturedImage');
