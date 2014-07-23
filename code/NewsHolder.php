@@ -21,8 +21,7 @@ class NewsHolder extends DatedUpdateHolder {
 	private static $update_class = 'NewsPage';
 
 	/**
-	 * Icon to use in the CMS page tree. This should be the full filename, relative to the webroot.
-	 * @var $icon
+	 * @var string $icon Icon to use in the CMS page tree. This should be the full filename, relative to the webroot.
 	 */
 	private static $icon = 'datedupdates/images/icons/sitetree_images/news_listing.png';
 
@@ -38,7 +37,7 @@ class NewsHolder extends DatedUpdateHolder {
 	 * @param $year Numeric value of the year to show.
 	 * @param $monthNumber Numeric value of the month to show.
 	 *
-	 * @returns DataList | PaginatedList
+	 * @return DataList | PaginatedList
 	 */
 	public static function AllUpdates($className = 'NewsPage', $parentID = null, $tagID = null, $dateFrom = null,
 			$dateTo = null, $year = null, $monthNumber = null) {

@@ -1,5 +1,14 @@
 <?php
-
+/**
+ * An news article page type that adds contact name, phone, email and mobile fields
+ * intended to provide that info for media enquiries.
+ *
+ * This code is forked from https://gitlab.cwp.govt.nz/cwp/cwp (16/Jul/2014)
+ *
+ * @author  scienceninjas@silverstripe.com
+ * @license BSD License (http://silverstripe.org/bsd-license/)
+ * @package datedupdates
+ */
 class MediaPage extends NewsPage {
 
 	private static $description = 'A news article with media enquiry fields';

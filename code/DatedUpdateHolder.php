@@ -22,31 +22,29 @@
 class DatedUpdateHolder extends Page {
 
 	/**
-	 * This is meant as an abstract base class, so we want to hide the ancestor from the cms
-	 * @var $hide_ancestor
+	 * @var $hide_ancestor This is meant as an abstract base class, so we want to hide the ancestor from the cms.
 	 */
 	private static $hide_ancestor = 'DatedUpdateHolder';
 
 	/**
-	 * A display label used in the getUpdateName function
-	 * @var $update_name
+	 * @var $update_name A display label used in the getUpdateName function.
 	 */
 	private static $update_name = 'Updates';
 
 	/**
-	 * The child page classname to lookup when finding all updates belonging to this holder
-	 * @var $update_class
+	 * @var $update_class The child page classname to lookup when finding all updates belonging to this holder.
 	 */
 	private static $update_class = 'DatedUpdatePage';
 
 	/**
-	 * which must match your many_many array key for the {@link TaxonomyTerm} relationship in the base page where your taxonomy is setup
-	 * @var $taxonomy_join_table
+	 * @var $taxonomy_join_table This must match your many_many array key for the {@link TaxonomyTerm} relationship in the base page where your taxonomy is setup.
 	 */
 	private static $taxonomy_join_table = 'Page_Tags';
 
 	/**
 	 * Find all distinct tags (TaxonomyTerms) associated with the DatedUpdatePages under this holder.
+	 *
+	 * @return DataList
 	 */
 	public function UpdateTags() {
 		$tags = TaxonomyTerm::get()
@@ -59,6 +57,8 @@ class DatedUpdateHolder extends Page {
 
 	/**
 	 * Wrapper to find all updates belonging to this holder, based on some filters.
+	 *
+	 * @return DataList | PaginatedList
 	 */
 	public function Updates($tagID = null, $dateFrom = null, $dateTo = null, $year = null, $monthNumber = null) {
 		$className = Config::inst()->get($this->ClassName, 'update_class');
@@ -66,7 +66,7 @@ class DatedUpdateHolder extends Page {
 	}
 
 	/**
-	 * Find all site's updates, based on some filters.
+	 * Find all the sites updates, based on some filters.
 	 * Omitting parameters will prevent relevant filters from being applied. The filters are ANDed together.
 	 *
 	 * @param $className The name of the class to fetch.
@@ -77,7 +77,7 @@ class DatedUpdateHolder extends Page {
 	 * @param $year Numeric value of the year to show.
 	 * @param $monthNumber Numeric value of the month to show.
 	 *
-	 * @returns DataList | PaginatedList
+	 * @return DataList | PaginatedList
 	 */
 	public static function AllUpdates($className = 'DatedUpdatePage', $parentID = null, $tagID = null, $dateFrom = null,
 			$dateTo = null, $year = null, $monthNumber = null) {
@@ -145,12 +145,12 @@ class DatedUpdateHolder extends Page {
 	 *     Months => ArrayList:
 	 *     ...
 	 *
-	 * @param $updates DataList DataList to extract months from.
-	 * @param $link Link used as abase to construct the MonthLink.
-	 * @param $currentYear Currently selected year, for computing the link active state.
-	 * @param $currentMonthNumber Currently selected month, for computing the link active state.
+	 * @param DataList $updates The DataList to extract months from
+	 * @param $link Link used as abase to construct the MonthLink
+	 * @param $currentYear Currently selected year, for computing the link active state
+	 * @param $currentMonthNumber Currently selected month, for computing the link active state
 	 *
-	 * @returns ArrayList
+	 * @return ArrayList
 	 */
 	public static function ExtractMonths(DataList $updates, $link = null, $currentYear = null, $currentMonthNumber = null) {
 		// Set the link to current URL in the same way the HTTP::setGetVar does it.
@@ -209,10 +209,16 @@ class DatedUpdateHolder extends Page {
 		return new ArrayList(array_reverse($years));
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getDefaultRSSLink() {
 		return $this->Link('rss');
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getSubscriptionTitle() {
 		return $this->Title;
 	}
@@ -233,8 +239,7 @@ class DatedUpdateHolder extends Page {
 class DatedUpdateHolder_Controller extends Page_Controller {
 
 	/**
-	 * The list of functions that are public scoped url segments in this controller
-	 * @var array
+	 * @var array The list of functions that are public scoped url segments in this controller
 	 */
 	private static $allowed_actions = array(
 		'rss',
@@ -255,7 +260,8 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 	}
 
 	/**
-	 * Returns a description of the current filter
+	 * Get a description of the current filter
+	 *
 	 * @return string
 	 */
 	public function FilterDescription() {
@@ -296,6 +302,7 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 
 	/**
 	 * Get a label to use in the Updates display
+	 *
 	 * @return string
 	 */
 	public function getUpdateName() {
@@ -305,7 +312,7 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 	/**
 	 * Parse URL parameters and set the filters
 	 *
-	 * @param $produceErrorMessages Set to false to omit session messages.
+	 * @param boolean $produceErrorMessages Set to false to omit session messages.
 	 * @return array
 	 */
 	public function parseParams($produceErrorMessages = true) {
@@ -377,7 +384,8 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 
 	/**
 	 * Build the link - keep the date range, reset the rest.
-	 * @return String Absolute URL
+	 *
+	 * @return string Absolute URL
 	 */
 	public function AllTagsLink() {
 		$link = HTTP::setGetVar('tag', null, null, '&');
@@ -390,6 +398,7 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 
 	/**
 	 * List tags and attach links.
+	 *
 	 * @return ArrayList
 	 */
 	public function UpdateTagsWithLinks() {
@@ -398,7 +407,7 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 		$processed = new ArrayList();
 
 		foreach ($tags as $tag) {
-			// Build the link - keep the tag, and date range, but reset month, year and pagination.
+			// Build the link - keep the tag, and date range, but reset month, year and pagination
 			$link = HTTP::setGetVar('tag', $tag->ID, null, '&');
 			$link = HTTP::setGetVar('month', null, $link, '&');
 			$link = HTTP::setGetVar('year', null, $link, '&');
@@ -413,6 +422,7 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 
 	/**
 	 * Get the TaxonomyTerm related to the current tag GET parameter.
+	 *
 	 * @return TaxonomyTerm
 	 */
 	public function CurrentTag() {
@@ -426,6 +436,7 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 	/**
 	 * Extract the available months based on the current query.
 	 * Only tag is respected. Pagination and months are ignored.
+	 *
 	 * @return DatedUpdateHolder
 	 */
 	public function AvailableMonths() {
@@ -441,6 +452,7 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 
 	/**
 	 * Get the updates based on the current query.
+	 *
 	 * @return PaginatedList
 	 */
 	public function FilteredUpdates($pageSize = 20) {

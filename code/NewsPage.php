@@ -47,8 +47,7 @@ class NewsPage extends DatedUpdatePage {
 class NewsPage_Controller extends DatedUpdatePage_Controller {
 
 	/**
-	 * The list of functions that are public scoped url segments in this controller
-	 * @var array
+	 * @var array $allowed_actions The list of functions that are public scoped url segments in this controller.
 	 */
 	private static $allowed_actions = array(
 	);

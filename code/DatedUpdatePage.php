@@ -11,20 +11,28 @@
 class DatedUpdatePage extends Page {
 
 	/**
-	 * This is meant as an abstract base class, so we want to hide the ancestor from the cms
-	 * @var $hide_ancestor
+	 * @var string $hide_ancestor This is meant as an abstract base class, so we want to hide the ancestor from the cms.
 	 */
 	private static $hide_ancestor = 'DatedUpdatePage';
 
+	/**
+	 * @var array $defaults Default values used to initialise properties of this class. ShowInMenus is false to hide this class from cms generated menus.
+	 */
 	private static $defaults = array(
 		'ShowInMenus' => false
 	);
 
+	/**
+	 * @var array $db Database field definitions.
+	 */
 	private static $db = array(
 		'Abstract' => 'Text',
 		'Date' => 'Datetime'
 	);
 
+	/**
+	 * @var array $summary_fields Used to configure the fields displayed in gridfields like we do in {@link NewsAdmin}
+	 */
 	private static $summary_fields = array(
 		'ID' => 'ID',
 		'MenuTitle' => 'Page name',
@@ -32,6 +40,9 @@ class DatedUpdatePage extends Page {
 		'LastEdited' => 'Last Edited'
 	);
 
+	/**
+	 * @return array A getter method for the $summary_fields array.
+	 */
 	public function summaryFields(){
 		return self::$summary_fields;
 	}
@@ -47,14 +58,20 @@ class DatedUpdatePage extends Page {
 		}
 	}
 
+	/**
+	 * @param boolean $includerelations A boolean value to indicate if the labels returned include relation fields
+	 * @return array|string
+	 */
 	public function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
 		$labels['Date'] = _t('DateUpdatePage.DateLabel', 'Date');
 		$labels['Abstract'] = _t('DateUpdatePage.AbstractTextFieldLabel', 'Abstract');
-
 		return $labels;
 	}
 
+	/**
+	 * @return FieldList
+	 */
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 
@@ -83,14 +100,13 @@ class DatedUpdatePage extends Page {
 class DatedUpdatePage_Controller extends Page_Controller {
 
 	/**
-	 * The list of functions that are public scoped url segments in this controller
-	 * @var array
+	 * @var array $allowed_actions The list of functions that are public scoped url segments in this controller
 	 */
 	private static $allowed_actions = array(
 	);
 
 	/**
-	 * Initialise the controller
+	 * Initialises the controller
 	 */
 	public function init() {
 	}
