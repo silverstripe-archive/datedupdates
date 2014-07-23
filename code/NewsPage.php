@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * Represents a default news article page type
+ *
+ * This code is forked from https://gitlab.cwp.govt.nz/cwp/cwp (16/Jul/2014)
+ *
+ * @author  scienceninjas@silverstripe.com
+ * @license BSD License (http://silverstripe.org/bsd-license/)
+ * @package datedupdates
+ */
 class NewsPage extends DatedUpdatePage {
 
 	private static $description = 'A generic news article';
@@ -38,4 +46,16 @@ class NewsPage extends DatedUpdatePage {
 
 class NewsPage_Controller extends DatedUpdatePage_Controller {
 
+	/**
+	 * The list of functions that are public scoped url segments in this controller
+	 * @var array
+	 */
+	private static $allowed_actions = array(
+	);
+
+	/**
+	 * Initialise the controller
+	 */
+	public function init() {
+	}
 }

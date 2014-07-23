@@ -1,7 +1,19 @@
 <?php
+/**
+ * An abstract base class for {@link NewsPage} pages.
+ *
+ * This code is forked from https://gitlab.cwp.govt.nz/cwp/cwp (16/Jul/2014)
+ *
+ * @author  scienceninjas@silverstripe.com
+ * @license BSD License (http://silverstripe.org/bsd-license/)
+ * @package datedupdates
+ */
 class DatedUpdatePage extends Page {
 
-	// Meant as an abstract base class.
+	/**
+	 * This is meant as an abstract base class, so we want to hide the ancestor from the cms
+	 * @var $hide_ancestor
+	 */
 	private static $hide_ancestor = 'DatedUpdatePage';
 
 	private static $defaults = array(
@@ -69,4 +81,17 @@ class DatedUpdatePage extends Page {
 }
 
 class DatedUpdatePage_Controller extends Page_Controller {
+
+	/**
+	 * The list of functions that are public scoped url segments in this controller
+	 * @var array
+	 */
+	private static $allowed_actions = array(
+	);
+
+	/**
+	 * Initialise the controller
+	 */
+	public function init() {
+	}
 }

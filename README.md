@@ -11,6 +11,7 @@ SilverStripe ScienceNinjas
 ## Requirements
 
 SilverStripe 3.1.x
+Silverstripe Taxonomy
 
 ## Overview
 

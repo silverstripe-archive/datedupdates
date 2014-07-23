@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * Container page for News, Events and Media articles, provides filtering, pagination and rss
+ *
+ * This code is forked from https://gitlab.cwp.govt.nz/cwp/cwp (16/Jul/2014)
+ *
+ * @author  scienceninjas@silverstripe.com
+ * @license BSD License (http://silverstripe.org/bsd-license/)
+ * @package datedupdates
+ */
 class NewsHolder extends DatedUpdateHolder {
 
 	private static $description = 'Container page for News, Events and Media articles, provides filtering and pagination';
@@ -12,9 +20,11 @@ class NewsHolder extends DatedUpdateHolder {
 
 	private static $update_class = 'NewsPage';
 
+	/**
+	 * Icon to use in the CMS page tree. This should be the full filename, relative to the webroot.
+	 * @var $icon
+	 */
 	private static $icon = 'datedupdates/images/icons/sitetree_images/news_listing.png';
-
-	public $pageIcon = 'datedupdates/images/icons/sitetree_images/news_listing.png';
 
 	/**
 	 * Find all site's news items, based on some filters.
@@ -38,6 +48,7 @@ class NewsHolder extends DatedUpdateHolder {
 }
 
 class NewsHolder_Controller extends DatedUpdateHolder_Controller {
+
 	private static $allowed_actions = array(
 		'rss'
 	);

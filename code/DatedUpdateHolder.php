@@ -1,14 +1,48 @@
 <?php
-
+/**
+ * An abstract base class for {@link NewsHolder} pages.
+ *
+ * This code is forked from https://gitlab.cwp.govt.nz/cwp/cwp (16/Jul/2014)
+ *
+ * This class provides the rss and filtering features for displaying {@link DatedUpdatePage} pages by month, year and taxonomy tag.
+ *
+ * Requires the taxonomy module, note the var $taxonomy_join_table which must match your many_many array key for
+ * the {@link TaxonomyTerm} relationship in the base page where your taxonomy is setup, e.g. if you did that in Page.php and had:
+ *
+ * 	private static $many_many = array(
+ *	  'Tags' => 'TaxonomyTerm'
+ *	);
+ *
+ * then you'd need $taxonomy_join_table = 'Page_Tags'; as that's the join table name between Page and Tags, yo.
+ *
+ * @author  scienceninjas@silverstripe.com
+ * @license BSD License (http://silverstripe.org/bsd-license/)
+ * @package datedupdates
+ */
 class DatedUpdateHolder extends Page {
 
-	// Meant as an abstract base class.
+	/**
+	 * This is meant as an abstract base class, so we want to hide the ancestor from the cms
+	 * @var $hide_ancestor
+	 */
 	private static $hide_ancestor = 'DatedUpdateHolder';
 
+	/**
+	 * A display label used in the getUpdateName function
+	 * @var $update_name
+	 */
 	private static $update_name = 'Updates';
 
+	/**
+	 * The child page classname to lookup when finding all updates belonging to this holder
+	 * @var $update_class
+	 */
 	private static $update_class = 'DatedUpdatePage';
 
+	/**
+	 * which must match your many_many array key for the {@link TaxonomyTerm} relationship in the base page where your taxonomy is setup
+	 * @var $taxonomy_join_table
+	 */
 	private static $taxonomy_join_table = 'Page_Tags';
 
 	/**
@@ -198,13 +232,31 @@ class DatedUpdateHolder extends Page {
  */
 class DatedUpdateHolder_Controller extends Page_Controller {
 
+	/**
+	 * The list of functions that are public scoped url segments in this controller
+	 * @var array
+	 */
 	private static $allowed_actions = array(
 		'rss',
 		'DateRangeForm'
 	);
 
 	/**
+	 * Initialise the controller to include requirements and sort out the rss feed
+	 */
+	public function init() {
+		parent::init();
+
+		// Include the DateRangeForm JS manually. We use custom form and $DateRangeForm is never invoked directly.
+		Requirements::javascript('framework/javascript/DateField.js');
+		Requirements::css('framework/thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
+
+		RSSFeed::linkToFeed($this->Link() . 'rss', $this->getSubscriptionTitle());
+	}
+
+	/**
 	 * Returns a description of the current filter
+	 * @return string
 	 */
 	public function FilterDescription() {
 		$params = $this->parseParams();
@@ -242,24 +294,19 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 		}
 	}
 
+	/**
+	 * Get a label to use in the Updates display
+	 * @return string
+	 */
 	public function getUpdateName() {
 		return Config::inst()->get($this->data()->ClassName, 'update_name');
 	}
 
-	public function init() {
-		parent::init();
-
-		// Include the DateRangeForm JS manually. We use custom form and $DateRangeForm is never invoked directly.
-		Requirements::javascript('framework/javascript/DateField.js');
-		Requirements::css('framework/thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
-
-		RSSFeed::linkToFeed($this->Link() . 'rss', $this->getSubscriptionTitle());
-	}
-
 	/**
-	 * Parse URL parameters.
+	 * Parse URL parameters and set the filters
 	 *
 	 * @param $produceErrorMessages Set to false to omit session messages.
+	 * @return array
 	 */
 	public function parseParams($produceErrorMessages = true) {
 		$tag = $this->request->getVar('tag');
@@ -330,6 +377,7 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 
 	/**
 	 * Build the link - keep the date range, reset the rest.
+	 * @return String Absolute URL
 	 */
 	public function AllTagsLink() {
 		$link = HTTP::setGetVar('tag', null, null, '&');
@@ -342,6 +390,7 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 
 	/**
 	 * List tags and attach links.
+	 * @return ArrayList
 	 */
 	public function UpdateTagsWithLinks() {
 		$tags = $this->UpdateTags();
@@ -364,6 +413,7 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 
 	/**
 	 * Get the TaxonomyTerm related to the current tag GET parameter.
+	 * @return TaxonomyTerm
 	 */
 	public function CurrentTag() {
 		$tagID = $this->request->getVar('tag');
@@ -376,6 +426,7 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 	/**
 	 * Extract the available months based on the current query.
 	 * Only tag is respected. Pagination and months are ignored.
+	 * @return DatedUpdateHolder
 	 */
 	public function AvailableMonths() {
 		$params = $this->parseParams();
@@ -390,6 +441,7 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 
 	/**
 	 * Get the updates based on the current query.
+	 * @return PaginatedList
 	 */
 	public function FilteredUpdates($pageSize = 20) {
 		$params = $this->parseParams();
@@ -408,6 +460,9 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 		return $list;
 	}
 
+	/**
+	 * @return Form
+	 */
 	public function DateRangeForm() {
 		$fields = new FieldList(
 			$dateFrom = new DateField('from'),
@@ -434,6 +489,9 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 		return $form;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function doDateFilter() {
 		$params = $this->parseParams();
 
@@ -445,6 +503,9 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 		$this->redirect($link);
 	}
 
+	/**
+	 * @return void
+	 */
 	public function doDateReset() {
 		$params = $this->parseParams(false);
 
@@ -455,9 +516,11 @@ class DatedUpdateHolder_Controller extends Page_Controller {
 		$this->redirect($link);
 	}
 
+	/**
+	 * @return string
+	 */
 	public function rss() {
 		$rss = new RSSFeed($this->Updates()->sort('Created DESC')->limit(20), $this->Link(), $this->getSubscriptionTitle());
 		return $rss->outputToBrowser();
 	}
 }
-
