@@ -56,5 +56,6 @@ class NewsPage_Controller extends DatedUpdatePage_Controller {
 	 * Initialise the controller
 	 */
 	public function init() {
+		parent::init();
 	}
 }
