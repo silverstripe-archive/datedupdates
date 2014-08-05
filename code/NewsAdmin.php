@@ -32,7 +32,6 @@ class NewsAdmin extends ModelAdmin {
 	 * Don't show the Import from CSV form
 	 */
 	private static $managed_models = array(
-		'NewsHolder',
 		'NewsPage',
 		'EventPage',
 		'MediaPage'
