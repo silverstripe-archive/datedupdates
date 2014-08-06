@@ -43,4 +43,16 @@ class EventPage extends NewsPage {
 
 class EventPage_Controller extends NewsPage_Controller {
 
+	/**
+	 * @var array $allowed_actions The list of functions that are public scoped url segments in this controller.
+	 */
+	private static $allowed_actions = array(
+	);
+
+	/**
+	 * Initialise the controller
+	 */
+	public function init() {
+		parent::init();
+	}
 }

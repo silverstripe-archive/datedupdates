@@ -52,6 +52,13 @@ class NewsHolder_Controller extends DatedUpdateHolder_Controller {
 		'rss'
 	);
 
+	/**
+	 * Initialise the controller
+	 */
+	public function init() {
+		parent::init();
+	}
+
 	public function rss() {
 		$rss = new RSSFeed($this->Updates()->sort('Created DESC')->limit(20), $this->Link(), $this->getSubscriptionTitle());
 		$rss->setTemplate('NewsHolder_rss');

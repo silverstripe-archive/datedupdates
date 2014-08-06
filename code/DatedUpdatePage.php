@@ -100,14 +100,15 @@ class DatedUpdatePage extends Page {
 class DatedUpdatePage_Controller extends Page_Controller {
 
 	/**
-	 * @var array $allowed_actions The list of functions that are public scoped url segments in this controller
+	 * @var array $allowed_actions The list of functions that are public scoped url segments in this controller.
 	 */
 	private static $allowed_actions = array(
 	);
 
 	/**
-	 * Initialises the controller
+	 * Initialise the controller
 	 */
 	public function init() {
+		parent::init();
 	}
 }
