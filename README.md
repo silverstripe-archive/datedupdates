@@ -21,7 +21,7 @@ news articles on a website.
 ## Documentation
 
 Extract to the "datedupdates" directory in your SilverStripe folder, and run dev/build.
-You should now have a "News Holder" page type, and "News Item" page types can be
+You should now have a "News Holder" page type, and "News, Event and Media article" page types can be
 created beneath the news holders.
 
 ## Known issues

@@ -9,7 +9,7 @@
 </p>
 
 <% if EventDate %>
-	<p class="event-date">$EventDate.nice</p>
+	<p class="event-date">$EventDate</p>
 <% end_if %>
 <% if EventLocation %>
 	<p class="event-location">$EventLocation</p>
