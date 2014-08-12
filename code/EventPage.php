@@ -22,21 +22,21 @@ class EventPage extends NewsPage {
 	public $pageIcon = 'datedupdates/images/icons/sitetree_images/flag.png';
 
 	private static $db = array(
-		'EventDate' => 'Datetime',
+		'EventDate' => 'Varchar(255)',
 		'EventLocation' => 'Varchar(255)'
 	);
 
 	public function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
-		$labels['EventLocation'] = _t('DateUpdatePage.EventDateFieldLabel', 'Event Date');
+		$labels['EventDate'] = _t('DateUpdatePage.EventDateFieldLabel', 'Event Date');
 		$labels['EventLocation'] = _t('DateUpdatePage.EventLocationFieldLabel', 'Event Location');
 		return $labels;
 	}
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
-		$fields->addFieldToTab('Root.Main', new DatetimeField('EventDate', $this->fieldLabel('EventDate')), 'FeaturedImage');
-		$fields->addFieldToTab('Root.Main', new TextField('Location', $this->fieldLabel('EventLocation')), 'FeaturedImage');
+		$fields->addFieldToTab('Root.Main', new TextField('EventDate', $this->fieldLabel('EventDate')), 'FeaturedImage');
+		$fields->addFieldToTab('Root.Main', new TextField('EventLocation', $this->fieldLabel('EventLocation')), 'FeaturedImage');
 		return $fields;
 	}
 }
