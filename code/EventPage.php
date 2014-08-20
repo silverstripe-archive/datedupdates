@@ -3,8 +3,6 @@
  * An news article page type that adds event date and location fields,
  * intended to represent an article that describes a physical event or meeting.
  *
- * This code is forked from https://gitlab.cwp.govt.nz/cwp/cwp (16/Jul/2014)
- *
  * @author  scienceninjas@silverstripe.com
  * @license BSD License (http://silverstripe.org/bsd-license/)
  * @package datedupdates
