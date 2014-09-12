@@ -37,10 +37,10 @@ class MediaPage extends NewsPage {
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
-		$fields->addFieldToTab('Root.Main', new TextField('ContactName', $this->fieldLabel('ContactName')), 'FeaturedImage');
-		$fields->addFieldToTab('Root.Main', new EmailField('ContactEmail', $this->fieldLabel('ContactEmail')), 'FeaturedImage');
-		$fields->addFieldToTab('Root.Main', new TextField('ContactPhone', $this->fieldLabel('ContactPhone')), 'FeaturedImage');
-		$fields->addFieldToTab('Root.Main', new TextField('ContactMobile', $this->fieldLabel('ContactMobile')), 'FeaturedImage');
+		$fields->addFieldToTab('Root.Main', new TextField('ContactName', $this->fieldLabel('ContactName')), 'Content');
+		$fields->addFieldToTab('Root.Main', new EmailField('ContactEmail', $this->fieldLabel('ContactEmail')), 'Content');
+		$fields->addFieldToTab('Root.Main', new TextField('ContactPhone', $this->fieldLabel('ContactPhone')), 'Content');
+		$fields->addFieldToTab('Root.Main', new TextField('ContactMobile', $this->fieldLabel('ContactMobile')), 'Content');
 		return $fields;
 	}
 }
