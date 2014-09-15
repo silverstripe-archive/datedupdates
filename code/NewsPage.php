@@ -73,6 +73,7 @@ class NewsPage_Controller extends DatedUpdatePage_Controller {
 	 * @var array $allowed_actions The list of functions that are public scoped url segments in this controller.
 	 */
 	private static $allowed_actions = array(
+		'index'
 	);
 
 	/**
@@ -80,5 +81,21 @@ class NewsPage_Controller extends DatedUpdatePage_Controller {
 	 */
 	public function init() {
 		parent::init();
+	}
+
+	/**
+	 * Load an article by ajax, fallback to default rendering if not an ajax request
+	 *
+	 * @return string
+	 */
+	public function index() {
+		if(Director::is_ajax()) {
+			return json_encode(array(
+				'html' => $this->renderWith("NewsItem_Content")->value
+			));
+		}
+		else {
+			return parent::index();
+		}
 	}
 }

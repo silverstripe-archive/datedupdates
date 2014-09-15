@@ -67,7 +67,8 @@ class NewsHolder extends DatedUpdateHolder {
 class NewsHolder_Controller extends DatedUpdateHolder_Controller {
 
 	private static $allowed_actions = array(
-		'rss'
+		'rss',
+//		'datedupdate'
 	);
 
 	/**
@@ -82,4 +83,66 @@ class NewsHolder_Controller extends DatedUpdateHolder_Controller {
 		$rss->setTemplate('NewsHolder_rss');
 		return $rss->outputToBrowser();
 	}
+
+	/* *
+	 * Responds to ajax calls to return a json object containing DatedUpdatePage content that is
+	 * rendered in its panel tempalte.
+	 *
+	 * This method is called by: themes/meridian/js/src/news-panel.src.js
+	 *
+	 * @param  SS_Request Silverstripe Request object passed in as a paramter
+	 * @return string 	JSON w/ Content of requested DatedUpdatePage
+	 *                  Empty JSON object if DatedUpdatePage is not found
+
+	public function datedupdate(SS_HTTPRequest $request) {
+		$newsID = $request->param('ID');
+		$this->response->addHeader("Content-Type", "application/json");
+		if(Director::is_ajax()) {
+			// Load the news article
+			$datedUpdatePage = DatedUpdatePage::get()
+					->filter(array('ID' => Convert::raw2sql($newsID)))
+					->First();
+			if($datedUpdatePage && $datedUpdatePage->ID && $datedUpdatePage->isPublished()) {
+				// Build an array of template data to pass into the renderWith function, these field names must
+				// match the variables referenced in the template itself
+				$templateData = array(
+						'Title'				=> $datedUpdatePage->Title,
+						'Author' 			=> $datedUpdatePage->Author,
+						'Date' 				=> $datedUpdatePage->Date,
+						'Content' 			=> $datedUpdatePage->Content,
+						'ClassName'			=> $datedUpdatePage->ClassName
+					);
+
+				// Check SecondaryContent is valid before adding it
+				if(isset($datedUpdatePage->SecondaryContent) && $datedUpdatePage->SecondaryContent !== null) {
+					$templateData['SecondaryContent'] = $datedUpdatePage->SecondaryContent;
+				}
+				// Add extra fields for EventPage and MediaPage types
+				if($datedUpdatePage->ClassName == 'EventPage') {
+					$templateData['EventDate'] 		= $datedUpdatePage->EventDate;
+					$templateData['EventLocation'] 	= $datedUpdatePage->EventLocation;
+				}
+				// @todo maybe use Email::obfuscate on $datedUpdatePage->ContactEmail
+				elseif($datedUpdatePage->ClassName == 'MediaPage') {
+					$templateData['ContactName'] 	= $datedUpdatePage->ContactName;
+					$templateData['ContactEmail'] 	= $datedUpdatePage->ContactEmail;
+					$templateData['ContactPhone'] 	= $datedUpdatePage->ContactPhone;
+					$templateData['ContactMobile'] 	= $datedUpdatePage->ContactMobile;
+				}
+
+				// Get the content by rendering it in a template
+				$content = $this->renderWith('Panels/DatedUpdatePanel_Content', $templateData);
+				// strip the BR tags and html_entity_decode the string makes it display as expected
+				$content = html_entity_decode(str_ireplace('<br />', '', $content));
+
+				// parse shortcodes in content
+				$content = ShortcodeParser::get_active()->parse($content);
+
+				// return the content wrapped in a json array
+				return json_encode(array('html' => $content));
+			}
+		}
+		return '{}';
+	}
+		 */
 }
