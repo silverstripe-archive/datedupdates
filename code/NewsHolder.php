@@ -20,6 +20,11 @@ class NewsHolder extends DatedUpdateHolder {
 
 	private static $update_class = 'NewsPage';
 
+	private static $db = array(
+		'FooterHeading' => 'Varchar(255)',
+		'FooterContent' => 'HTMLText'
+	);
+
 	/**
 	 * @var string $icon Icon to use in the CMS page tree. This should be the full filename, relative to the webroot.
 	 */
@@ -43,6 +48,19 @@ class NewsHolder extends DatedUpdateHolder {
 			$dateTo = null, $year = null, $monthNumber = null) {
 
 		return parent::AllUpdates($className, $parentID, $tagID, $dateFrom, $dateTo, $year, $monthNumber)->Sort('Date', 'DESC');
+	}
+
+	public function getCMSFields() {
+		$fields = parent::getCMSFields();
+		$fields->addFieldToTab('Root.Footer Content', new TextField('FooterHeading', 'Footer Heading'));
+		$fields->addFieldToTab('Root.Footer Content', new HTMLEditorField('FooterContent', 'Footer Content'));
+		return $fields;
+	}
+
+	public function getFooterHeadingAnchor(){
+		if($this->FooterHeading) {
+			return Convert::raw2url($this->FooterHeading);
+		}
 	}
 }
 
